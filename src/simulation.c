@@ -64,7 +64,7 @@ int main()
     //defining parameters
     int numParticles = 1000;
     float delT = 0.01;
-    int numIters = 20000; // 720000;
+    int numIters = 360000; // 720000;
     float M = 1;
     float xSize = 100, ySize = 200, zSize = 400;
     float bodyRadius = 0.5;
@@ -90,6 +90,7 @@ int main()
     //looping over all timesteps
     for (int i = 0; i < numIters; i++)
     {
+        if(i%10000 == 0)printf("%d\n", i);
         //first parallel loop over all particles to calculate force and update speed and positions
         #pragma omp parallel for
         for (int j = 0; j < numParticles; j++)
@@ -135,12 +136,12 @@ int main()
                 struct vec3 force = constMul(dir, (M * M / distSq));
 
                 // chheck for collisions wiht other particles, exchange velocities on collision
-                if (distSq <= 2 * bodyRadius)
-                {
-                    struct vec3 temp = velNhalf[k];
-                    velNhalf[k] = velNhalf[j];
-                    velNhalf[j] = temp;
-                }
+                // if (distSq <= 2 * bodyRadius)
+                // {
+                //     struct vec3 temp = velNhalf[k];
+                //     velNhalf[k] = velNhalf[j];
+                //     velNhalf[j] = temp;
+                // }
 
                 fN = sum(fN, force);
             }
